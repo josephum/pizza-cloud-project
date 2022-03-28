@@ -2,6 +2,7 @@ package com.cydeo.pizzacloud.controller;
 
 import com.cydeo.pizzacloud.model.Pizza;
 import com.cydeo.pizzacloud.model.PizzaOrder;
+import com.cydeo.pizzacloud.repository.PizzaOrderRepository;
 import com.cydeo.pizzacloud.repository.PizzaRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,13 +15,15 @@ import java.util.UUID;
 public class OrderController {
 
     private final PizzaRepository pizzaRepository;
+    private final PizzaOrderRepository pizzaOrderRepository;
 
-    public OrderController(PizzaRepository pizzaRepository) {
+    public OrderController(PizzaRepository pizzaRepository, PizzaOrderRepository pizzaOrderRepository) {
         this.pizzaRepository = pizzaRepository;
+        this.pizzaOrderRepository = pizzaOrderRepository;
     }
 
     @GetMapping("/current")
-    public String orderForm(UUID pizzaId, Model model) {
+    public String orderForm(@RequestParam(name = "pizzaId") UUID pizzaId, Model model) {
 
         PizzaOrder pizzaOrder = new PizzaOrder();
 
@@ -29,22 +32,22 @@ public class OrderController {
 
         model.addAttribute("pizzaOrder", pizzaOrder);
 
-        return "/orderForm";
+        return "orderForm";
     }
 
-    @PostMapping("/{pizzaId}")
-    public String processOrder(UUID pizzaId, PizzaOrder pizzaOrder) {
+    @PostMapping("/create-order")
+    public String processOrder(@RequestParam(name = "pizzaId") UUID pizzaId, @ModelAttribute("pizzaOrder") PizzaOrder pizzaOrder) {
 
         // Save the order
-
         pizzaOrder.setPizza(getPizza(pizzaId));
+        pizzaOrderRepository.createPizzaOrder(pizzaOrder);
         return "redirect:/home";
     }
 
     //TODO
     private Pizza getPizza(UUID pizzaId) {
         // Get the pizza from repository based on it's id
-        return new Pizza();
+        return pizzaRepository.getById(pizzaId);
     }
 
 }
