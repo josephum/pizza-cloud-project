@@ -16,6 +16,7 @@ public class PizzaOrderRepository {
     public PizzaOrder createPizzaOrder(PizzaOrder pizzaOrderToSave) {
         pizzaOrderList.add(pizzaOrderToSave);
         System.out.println("New pizza order has been added. #Order = "+pizzaOrderList.size());
+        System.out.println("With pizzaId: "+pizzaOrderToSave.getPizza().getId());
         return pizzaOrderToSave;
     }
 
