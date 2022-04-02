@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @Controller
+@RequestMapping("/design")
 public class DesignPizzaController {
 
     private PizzaRepository pizzaRepository;
@@ -18,7 +19,7 @@ public class DesignPizzaController {
         this.pizzaRepository = pizzaRepository;
     }
 
-    @GetMapping("/design")
+    @GetMapping("/createPizza")
     public String showDesignForm(Model model) {
 
         model.addAttribute("cheeses", DataGenerator.cheeseTypeList);
@@ -36,7 +37,7 @@ public class DesignPizzaController {
         pizza.setId(UUID.randomUUID());
         pizzaRepository.createPizza(pizza);
 
-        return "redirect:orders/current?pizzaId=" + pizza.getId();
+        return "redirect:/orders/current?pizzaId=" + pizza.getId();
 
     }
 
